@@ -1,9 +1,9 @@
 #include <iostream>
 // Este es para matrices 2x2
-const int MAX_SIZE = 2; // Este es el orden máximo de las matrices
+const int MAX_SIZE = 2; // Este es el orden mï¿½ximo de las matrices
 using namespace std;
 
-// Función para almacenar valores en una matriz
+// Funciï¿½n para almacenar valores en una matriz
 void llenarM(int A[MAX_SIZE][MAX_SIZE]) {
     for (int i = 0; i < MAX_SIZE; ++i) {
         for (int j = 0; j < MAX_SIZE; ++j) {
@@ -13,13 +13,13 @@ void llenarM(int A[MAX_SIZE][MAX_SIZE]) {
     }
 }
 
-// Función para crear una matriz
+// Funciï¿½n para crear una matriz
 void crearM(int A[MAX_SIZE][MAX_SIZE]) {
     cout << "\nLlene la matriz de tamano " << MAX_SIZE << "x" << MAX_SIZE << endl;
     llenarM(A);
 }
 
-// Función para mostrar matriz en pantalla
+// Funciï¿½n para mostrar matriz en pantalla
 void mostrarM(int A[MAX_SIZE][MAX_SIZE]) {
     for (int i = 0; i < MAX_SIZE; ++i) {
         for (int j = 0; j < MAX_SIZE; ++j) {
@@ -49,7 +49,7 @@ void rest(int A[MAX_SIZE][MAX_SIZE], int B[MAX_SIZE][MAX_SIZE], int C[MAX_SIZE][
     }
 }
 
-// Multiplicación por escalar
+// Multiplicaciï¿½n por escalar
 void escMul(int A[MAX_SIZE][MAX_SIZE], int escalar, int C[MAX_SIZE][MAX_SIZE]) {
     for (int i = 0; i < MAX_SIZE; i++) {
         for (int j = 0; j < MAX_SIZE; j++) {
@@ -58,7 +58,7 @@ void escMul(int A[MAX_SIZE][MAX_SIZE], int escalar, int C[MAX_SIZE][MAX_SIZE]) {
     }
 }
 
-// Multiplicación entre matrices
+// Multiplicaciï¿½n entre matrices
 void mult(int A[MAX_SIZE][MAX_SIZE], int B[MAX_SIZE][MAX_SIZE], int C[MAX_SIZE][MAX_SIZE]) {
     for (int i = 0; i < MAX_SIZE; i++) {
         for (int j = 0; j < MAX_SIZE; j++) {
@@ -70,7 +70,7 @@ void mult(int A[MAX_SIZE][MAX_SIZE], int B[MAX_SIZE][MAX_SIZE], int C[MAX_SIZE][
     }
 }
 
-// Transposición de una Matriz
+// Transposiciï¿½n de una Matriz
 void trans(int A[MAX_SIZE][MAX_SIZE], int C[MAX_SIZE][MAX_SIZE]) {
     for (int i = 0; i < MAX_SIZE; i++) {
         for (int j = 0; j < MAX_SIZE; j++) {
@@ -86,20 +86,20 @@ int det(int A[MAX_SIZE][MAX_SIZE]) {
 
 // Calcular Matriz Inversa
 bool inv(int A[MAX_SIZE][MAX_SIZE], float C[MAX_SIZE][MAX_SIZE]) {
-    int determinante = det(A);
+    float determinante = det(A);
     if (determinante == 0) {
         cout << "La matriz no tiene inversa (determinante es 0)." << endl;
         return false;
     }
 
-    C[0][0] =  A[1][1] / (float)determinante;
-    C[0][1] = -A[0][1] / (float)determinante;
-    C[1][0] = -A[1][0] / (float)determinante;
-    C[1][1] =  A[0][0] / (float)determinante;
+    C[0][0] =  A[1][1] / determinante;
+    C[0][1] = -A[0][1] / determinante;
+    C[1][0] = -A[1][0] / determinante;
+    C[1][1] =  A[0][0] / determinante;
     return true;
 }
 
-//-----------------------------------Función principal
+//-----------------------------------Funciï¿½n principal
 int main() {
     int op;
     int M1[MAX_SIZE][MAX_SIZE];

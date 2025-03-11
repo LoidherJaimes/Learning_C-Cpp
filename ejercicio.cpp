@@ -6,9 +6,6 @@ const int MINSIZE=3;
 int main() {
 	int M;
 	int N;
-	int Count;
-	int f=0;
-	int c=0;
 
 	cout<<"Digite M y N: ";
 	cin>>M>>N;
