@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#define MAXN 1000
+#define MAXN 2000000
 #define infinity 2147483647
 
 int C[MAXN + 1];
