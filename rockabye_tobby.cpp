@@ -5,14 +5,12 @@
 #define myPositiveInfinite 2147483647
 #define myNegativeInfinite -2147483647
 #define MAXN 500001
-#define MAXS 21
-#define vaccine "V"
 
 typedef struct
 {
-    int priority, order;
-    char name[MAXS];
-}patient;
+    int frecuence, time, priority;
+    char name[16];
+}medicine;
 
 
 int Parent(int i)
