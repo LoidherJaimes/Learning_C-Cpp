@@ -2,46 +2,53 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#define myPositiveInfinite 2147483647
-#define myNegativeInfinite -2147483647
-#define MAXN 500001
+#define myPositiveInfinite 2147483647   
+#define myNegativeInfinite -2147483647 
+#define MAXN 100000
 
-typedef struct
-{
-    int frecuence, time, priority;
+typedef struct {
     char name[16];
-}medicine;
-
-
-int Parent(int i)
-{
-    return (i/2);
-}
-
-int Left(int i)
-{
-    return (2 * i);
-}
-
-int Right(int i)
-{
-    return (2 * i + 1);
-}
-
-void MinHeapify(int Q[], int i, int heapSize)
-{
-    int l = Left(i);
-    int r = Right(i);
-    int least;
-    int temp;
+    int frecuencia;
+    int prioridad;
+    int tiempo;
     
-    if (l <= heapSize && Q[l] < Q[i])
+}medicamento;
+
+int Parent(int i) {
+    
+    return i / 2;
+}
+
+int Left(int i) {
+    
+    return 2 * i;
+}
+
+int Right(int i) {
+    
+    return 2 * i + 1;
+}
+
+void MinHeapify(medicamento Q[], int i, int heapSize) {
+    
+    int l, r, least; //inicializacion Pablo.
+    medicamento temp; 
+     
+    l = Left(i);
+    r = Right(i);
+
+    if ((l <= heapSize) && ((Q[l].tiempo < Q[i].tiempo) ||
+        ((Q[l].tiempo == Q[i].tiempo) && (Q[l].prioridad < Q[i].prioridad ))))
         least = l;
-    else
+    else 
         least = i;
-    if (r <= heapSize && Q[r] < Q[least])
+        
+    if((r <= heapSize) && ((Q[r].tiempo < Q[least].tiempo) ||
+        ((Q[r].tiempo == Q[least].tiempo) && (Q[r].prioridad < Q[least].prioridad))))       
         least = r;
-    if (least != i){
+        
+    if(least != i){
+        
         temp = Q[i];
         Q[i] = Q[least];
         Q[least] = temp;
@@ -49,57 +56,81 @@ void MinHeapify(int Q[], int i, int heapSize)
     }
 }
 
-int MinPQ_Minimum(int Q[])
-{
+medicamento MinPQ_Minimum(medicamento Q[]) {
+    
     return Q[1];
 }
 
-int MinPQ_Extract(int Q[], int *heapSize)
-{
-    int min = myNegativeInfinite;
+medicamento MinPQ_Extract(medicamento Q[], int *heapSize) {
     
-    if (*heapSize < 1)
-    {
+    medicamento min;
+    min.tiempo = myNegativeInfinite;
+    
+    if(*heapSize < 1)
         printf("Heap underflow.\n");
-    }
-    else
-    {
+        
+    else{
         min = Q[1];
         Q[1] = Q[*heapSize];
         *heapSize = *heapSize - 1;
         MinHeapify(Q, 1, *heapSize);
     }
-    return min;
+    
+    return min;    
 }
 
-void MinPQ_DecreaseKey(int Q[], int i, int key)
-{
-    int temp;
+void MinPQ_DecreaseKey(medicamento Q[], int i, medicamento key) {
     
-    if (key > Q[i])
+    medicamento temp;
+    
+    if(key.tiempo > Q[i].tiempo)
         printf("New key is higher than current key.\n");
-    else
-    {
+        
+    else{
         Q[i] = key;
-        while (i > 1 && Q[Parent(i)] > Q[i]){
+        while((i > 1) && ((Q[Parent(i)].tiempo > Q[i].tiempo) ||
+             ((Q[Parent(i)].tiempo == Q[i].tiempo) && Q[Parent(i)].prioridad > Q[i].prioridad))){ 
+            
             temp = Q[i];
             Q[i] = Q[Parent(i)];
             Q[Parent(i)] = temp;
             i = Parent(i);
         }
-    }
+    }    
 }
 
-void MinPQ_Insert(int Q[], int key, int *heapSize)
-{
-    *heapSize = *heapSize + 1;
-    Q[*heapSize] = myPositiveInfinite;
-    MinPQ_DecreaseKey(Q, *heapSize, key);
-}
-
-int main()
-{
+void MinPQ_Insert(medicamento Q[], medicamento key, int *heapSize) {
     
+    *heapSize = *heapSize + 1;
+    Q[*heapSize].tiempo = myPositiveInfinite;
+    MinPQ_DecreaseKey(Q, *heapSize, key);
+    
+}
 
+int main(){
+    int t, index, j, n, k, heapSize = 0;
+    medicamento ListaDatos[MAXN + 1], dato, minimo;
+    
+    scanf("%d", &t);
+    for(index = 1; index <= t; index++){
+        heapSize = 0;
+        scanf("%d %d", &n, &k);
+        for(j = 1; j <= n; j++){
+            scanf("%s %d", dato.name, &dato.frecuencia);
+            dato.prioridad = j;
+            dato.tiempo = dato.frecuencia;
+            
+            //Insertar en la cola el medicamento.
+            MinPQ_Insert(ListaDatos, dato, &heapSize);
+        }
+        for(j = 1; j <= k; j++){
+            minimo = MinPQ_Extract(ListaDatos, &heapSize);
+            printf("%d %s\n", minimo.tiempo, minimo.name);
+            minimo.tiempo += minimo.frecuencia; // Sumar correctamente el tiempo
+            MinPQ_Insert(ListaDatos, minimo, &heapSize);  
+        }
+      
+    }
+    
     return 0;
 }

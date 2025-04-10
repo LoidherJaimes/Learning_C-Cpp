@@ -2,106 +2,108 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#define myPositiveInfinite 2147483647
-#define myNegativeInfinite -2147483647
-#define MAXN 500001
-#define MAXS 21
-#define vaccine "V"
 
-typedef struct
-{
-    int priority, order;
-    char name[MAXS];
-}patient;
+#define INF_POS 2147483647
+#define INF_NEG -2147483647
+#define MAX_CAPACITY 1000000
 
+typedef struct {
+    char nombre[20];
+    int prioridad;
+    int ordenLlegada;
+} Paciente;
 
-int Parent(int i)
-{
-    return (i/2);
+int padre(int i) {
+    return i / 2;
 }
 
-int Left(int i)
-{
-    return (2 * i);
+int hijoIzq(int i) {
+    return i * 2;
 }
 
-int Right(int i)
-{
-    return (2 * i + 1);
+int hijoDer(int i) {
+    return 2 * i + 1;
 }
 
-void MinHeapify(int Q[], int i, int heapSize)
-{
-    int l = Left(i);
-    int r = Right(i);
-    int least;
-    int temp;
-    
-    if (l <= heapSize && Q[l] < Q[i])
-        least = l;
-    else
-        least = i;
-    if (r <= heapSize && Q[r] < Q[least])
-        least = r;
-    if (least != i){
-        temp = Q[i];
-        Q[i] = Q[least];
-        Q[least] = temp;
-        MinHeapify(Q, least, heapSize);
+void ajustarHeap(Paciente cola[], int i, int tamHeap) {
+    int izq = hijoIzq(i);
+    int der = hijoDer(i);
+    int menor = i;
+    Paciente aux;
+
+    if (izq <= tamHeap && 
+        (cola[izq].prioridad < cola[i].prioridad || 
+        (cola[izq].prioridad == cola[i].prioridad && cola[izq].ordenLlegada < cola[i].ordenLlegada)))
+        menor = izq;
+
+    if (der <= tamHeap && 
+        (cola[der].prioridad < cola[menor].prioridad || 
+        (cola[der].prioridad == cola[menor].prioridad && cola[der].ordenLlegada < cola[menor].ordenLlegada)))
+        menor = der;
+
+    if (menor != i) {
+        aux = cola[i];
+        cola[i] = cola[menor];
+        cola[menor] = aux;
+
+        ajustarHeap(cola, menor, tamHeap);
     }
 }
 
-int MinPQ_Minimum(int Q[])
-{
-    return Q[1];
-}
-
-int MinPQ_Extract(int Q[], int *heapSize)
-{
-    int min = myNegativeInfinite;
-    
-    if (*heapSize < 1)
-    {
+void extraerMin(Paciente cola[], int *tamHeap) {
+    if (*tamHeap < 1) {
         printf("Heap underflow.\n");
+    } else {
+        cola[1] = cola[*tamHeap];
+        (*tamHeap)--;
+        ajustarHeap(cola, 1, *tamHeap);
     }
-    else
-    {
-        min = Q[1];
-        Q[1] = Q[*heapSize];
-        *heapSize = *heapSize - 1;
-        MinHeapify(Q, 1, *heapSize);
-    }
-    return min;
 }
 
-void MinPQ_DecreaseKey(int Q[], int i, int key)
-{
-    int temp;
-    
-    if (key > Q[i])
-        printf("New key is higher than current key.\n");
-    else
-    {
-        Q[i] = key;
-        while (i > 1 && Q[Parent(i)] > Q[i]){
-            temp = Q[i];
-            Q[i] = Q[Parent(i)];
-            Q[Parent(i)] = temp;
-            i = Parent(i);
+void disminuirClave(Paciente cola[], int i, Paciente nuevo) {
+    Paciente aux;
+
+    if (nuevo.prioridad > cola[i].prioridad) {
+        printf("Invalid key\n");
+    } else {
+        cola[i] = nuevo;
+        while (i > 1 && cola[padre(i)].prioridad > cola[i].prioridad) {
+            aux = cola[i];
+            cola[i] = cola[padre(i)];
+            cola[padre(i)] = aux;
+            i = padre(i);
         }
     }
 }
 
-void MinPQ_Insert(int Q[], int key, int *heapSize)
-{
-    *heapSize = *heapSize + 1;
-    Q[*heapSize] = myPositiveInfinite;
-    MinPQ_DecreaseKey(Q, *heapSize, key);
+void insertarPaciente(Paciente cola[], Paciente nuevo, int *tamHeap) {
+    (*tamHeap)++;
+    cola[*tamHeap].prioridad = INF_POS;
+    disminuirClave(cola, *tamHeap, nuevo);
 }
 
-int main()
-{
-    
+int main() {
+    Paciente colaPacientes[MAX_CAPACITY + 1], nuevoPaciente;
+    char entrada[21];
+    int tamHeap = 0, contadorOrden = 1;
+
+    while (scanf("%20s", entrada) != EOF) {
+        if (strcmp(entrada, "V") == 0) {
+            if (tamHeap == 0) {
+                printf("\n");
+            } else {
+                printf("%s\n", colaPacientes[1].nombre);
+                extraerMin(colaPacientes, &tamHeap);
+            }
+        } else {
+            strcpy(nuevoPaciente.nombre, entrada);
+            scanf("%d", &nuevoPaciente.prioridad);
+            nuevoPaciente.prioridad *= -1;
+            nuevoPaciente.ordenLlegada = contadorOrden;
+            insertarPaciente(colaPacientes, nuevoPaciente, &tamHeap);
+            contadorOrden++;
+        }
+    }
 
     return 0;
 }
